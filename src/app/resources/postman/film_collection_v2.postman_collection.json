@@ -1,0 +1,3986 @@
+{
+	"info": {
+		"_postman_id": "ded5feff-99ad-475f-8578-55ece6ba06d6",
+		"name": "Film site student",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19077832"
+	},
+	"item": [
+		{
+			"name": "BACKDOOR",
+			"item": [
+				{
+					"name": "POST /reset",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/reset",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"reset"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /resample",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/resample",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"resample"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /executeSql",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "SELECT * FROM user;"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/executeSql",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"executeSql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /reload",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/reload",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"reload"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "POST /users/register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Expected response\", function() {\r",
+									"    pm.expect(pm.response.json().userId).to.be.a('number')\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"firstName\": \"Mike\",\n\t\"lastName\": \"Wheeler\",\n\t\"email\": \"mike.wheeler@hawkinsmiddle.school.us\",\n\t\"password\": \"paladin\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/register",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /users/login (incorrect password)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"mike.wheeler@hawkinsmiddle.school.us\",\n\t\"password\": \"notthepassword\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /users/login (no email field)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /users/login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Expected response\", function() {",
+									"    pm.expect(pm.response.json().token).to.be.a('string')",
+									"    pm.expect(pm.response.json().userId).to.be.a('number')",
+									"});",
+									"",
+									"pm.test(\"Set auth_token and user_id after login\", function() {",
+									"    const authToken = pm.response.json().token;",
+									"    if (typeof authToken !== \"undefined\") {",
+									"        pm.globals.set(\"auth_token\", authToken);",
+									"        pm.globals.set(\"test_token\", authToken);",
+									"    }",
+									"    const userId = pm.response.json().userId;",
+									"    if (typeof userId !== \"undefined\") {",
+									"        pm.globals.set(\"user_id\", userId);",
+									"    }",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"mike.wheeler@hawkinsmiddle.school.us\",\n\t\"password\": \"paladin\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /users/register (invalid email, already in use)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"firstName\": \"Lucas\",\n\t\"lastName\": \"Sinclair\",\n\t\"email\": \"k@gmail.com\",\n\t\"password\": \"ranger\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/register",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /users/register (invalid password)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"firstName\": \"John\",\n\t\"lastName\": \"Johnson\",\n\t\"email\": \"johnj@gmail.com\",\n\t\"password\": \"\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/register",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /users/register (missing first name)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"lastName\": \"Johnson\",\n\t\"email\": \"johnj@gmail.com\",\n\t\"password\": \"ranger\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/register",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /users/register (long last name)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"John\",\n    \"lastName\": \"jmhKGsEb3wQJ7OwWko3NoNhkSaVt3Hr6EABsv48sCILzsWJW2kIFt8G6ZIyLXi8j1\",\n\t\"email\": \"johnj@gmail.com\",\n\t\"password\": \"ranger\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/register",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /users/register (empty email)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"John\",\n\t\"lastName\": \"Johnson\",\n    \"email\": \"\",\n\t\"password\": \"ranger\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/register",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /users/:id (NaN)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 or 404\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([400, 404]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"type": "text",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/users/NotANumber",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"NotANumber"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /users/:id (me)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var expectedData = {\r",
+									"    \"firstName\": \"Mike\",\r",
+									"    \"lastName\": \"Wheeler\",\r",
+									"    \"email\": \"mike.wheeler@hawkinsmiddle.school.us\"\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Expected data\", function() {\r",
+									"    try {\r",
+									"        var data = pm.response.json()\r",
+									"        pm.expect(data.firstName).to.equal(\"Mike\")\r",
+									"        pm.expect(data.lastName).to.equal(\"Wheeler\")\r",
+									"        pm.expect(data.email).to.equal(\"mike.wheeler@hawkinsmiddle.school.us\")\r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"INVALID RESPONSE\")\r",
+									"    }\r",
+									"    \r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/users/{{user_id}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /users/:id (another user)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Expected data\", function() {\r",
+									"    try {\r",
+									"        var data = pm.response.json()\r",
+									"        pm.expect(data.firstName).to.equal(\"Kristy\")\r",
+									"        pm.expect(data.lastName).to.equal(\"Lincoln\")\r",
+									"        if(!data.hasOwnProperty(\"email\")){\r",
+									"            pm.expect(!data.hasOwnProperty(\"email\")).to.equal(true);\r",
+									"        } else {\r",
+									"            pm.expect.fail('Email is present')\r",
+									"        }\r",
+									"    } catch(err) {\r",
+									"        pm.expect.fail(\"INVALID RESPONSE\")\r",
+									"    }\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/users/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /users/:id (another user no auth)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									" \r",
+									"pm.test(\"Expected data\", function() {\r",
+									"    try{\r",
+									"        var data = pm.response.json()\r",
+									"        pm.expect(data.firstName).to.equal(\"Kristy\")\r",
+									"        pm.expect(data.lastName).to.equal(\"Lincoln\")\r",
+									"        if(data.hasOwnProperty(\"email\")){\r",
+									"            pm.expect.fail('Email is present')\r",
+									"            }\r",
+									"    } catch(err) {\r",
+									"        pm.expect.fail(\"INVALID RESPONSE\")\r",
+									"    }\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/users/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH /users/:id (me) (identical currentPassword and password)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"password\": \"paladin\",\n\t\"currentPassword\": \"paladin\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/{{user_id}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH /users/:id (me)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"password\": \"new secure password\",\n\t\"currentPassword\": \"paladin\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/{{user_id}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH /users/:id (me) (incorrect currentPassword)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"password\": \"password\",\n\t\"currentPassword\": \"incorrectPassword\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/{{user_id}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH /users/:id (me) (invalid email no top level comain)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"notan@email\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/{{user_id}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH /users/:id (another user)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Eleven\",\n\t\"email\": \"el@hawkinslab.com\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH /users/:id (notfound user)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403 or 404\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([404, 403]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Eleven\",\n\t\"email\": \"el@hawkinslab.com\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/999999999",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"999999999"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /users/logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    if (responseCode.code === 200) {",
+									"        // pm.globals.set(\"auth_token\", null);",
+									"        // pm.globals.set(\"user_id\", null);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/logout",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /users/logout (no header)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/logout",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /executeSql (set user token for testing)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// define the body with variables before sending",
+									"let token_body =  \"UPDATE `user` SET `auth_token`='token_placeholder' WHERE `id`={{user_id}};\";",
+									"token_body = token_body.replace('token_placeholder', pm.globals.get(\"auth_token\"));",
+									"pm.variables.set('token_body', token_body);",
+									"// pm.globals.set(\"auth_token\", \"test_token\");",
+									"// pm.globals.set(\"user_id\", 18);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "text/plain",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{token_body}}",
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/executeSql",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"executeSql"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users.images",
+			"item": [
+				{
+					"name": "GET /users/:id/image (me; no image yet)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/users/{{user_id}}/image",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}",
+								"image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /users/:id/image (me)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "image/jpeg",
+								"type": "text"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "{{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": "user_sample.jpg"
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/{{user_id}}/image",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}",
+								"image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /users/:id/image (me)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content Type is correct\", function() {\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"image/jpeg\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/users/{{user_id}}/image",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}",
+								"image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /users/:id/image (me; bmp)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "image/bmp"
+							},
+							{
+								"key": "X-Authorization",
+								"type": "text",
+								"value": "{{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": "sample.BMP"
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/{{user_id}}/image",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}",
+								"image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /users/:id/image (doesnt exist)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403 or 404\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([403, 404]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "image/jpeg"
+							},
+							{
+								"key": "X-Authorization",
+								"type": "text",
+								"value": "{{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": "user_sample.jpg"
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/999999999/image",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"999999999",
+								"image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE /users/:id/image (me)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/users/{{user_id}}/image",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}",
+								"image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE /users/:id/image (no authentication)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/users/{{user_id}}/image",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}",
+								"image"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "films",
+			"item": [
+				{
+					"name": "GET /films (no parameters)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var expectedData = {\r",
+									"    \"filmId\": 1,\r",
+									"    \"title\": \"Bast Part: Dated to Bail\",\r",
+									"    \"genreId\": 11,\r",
+									"    \"directorId\": 1,\r",
+									"    \"directorFirstName\": \"Kristy\",\r",
+									"    \"directorLastName\": \"Lincoln\",\r",
+									"    \"releaseDate\": \"2022-05-01T00:00:00.000Z\",\r",
+									"    \"ageRating\": \"M\",\r",
+									"    \"rating\": 7.2\r",
+									"}\r",
+									"\r",
+									"var expectedOrdering = [8, 21, 2, 4, 7, 3, 16, 14, 10, 6, 19, 18, 5, 1, 20, 15, 22, 11, 13, 9, 17, 12]\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Valid count and number of films\", function() {\r",
+									"    try {\r",
+									"        var data = pm.response.json()\r",
+									"        pm.expect(data.count).to.equal(22)\r",
+									"        pm.expect(data.films.length).to.equal(22)\r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"Incorrect count or number of films\")\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Valid ordering\", function() {\r",
+									"    try {\r",
+									"        var films = pm.response.json().films\r",
+									"        for (var i = 0; i<expectedOrdering.length; i++){\r",
+									"            if (expectedOrdering[i] !== films[i].filmId){\r",
+									"                pm.expect.fail(\"Invalid ordering of films\")\r",
+									"                break\r",
+									"            }\r",
+									"        }\r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"Invalid ordering of films\")\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Valid film data\", function() {\r",
+									"    try{\r",
+									"        var data = pm.response.json()\r",
+									"        var film = data.films.filter(f => f.filmId === expectedData.filmId)[0]\r",
+									"        pm.expect(film.filmId).to.equal(expectedData.filmId)\r",
+									"        pm.expect(film.title).to.equal(expectedData.title)\r",
+									"        pm.expect(film.genreId).to.equal(expectedData.genreId)\r",
+									"        pm.expect(film.directorId).to.equal(expectedData.directorId)\r",
+									"        pm.expect(film.directorFirstName).to.equal(expectedData.directorFirstName)\r",
+									"        pm.expect(film.directorLastName).to.equal(expectedData.directorLastName)\r",
+									"        // check issue with release date\r",
+									"        pm.expect(film.releaseDate).to.equal(expectedData.releaseDate)\r",
+									"        pm.expect(film.ageRating).to.equal(expectedData.ageRating)\r",
+									"        pm.expect(film.rating).to.equal(expectedData.rating)\r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"Incorrect film data\")\r",
+									"    }\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/films",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /films (q)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var expectedData =  {\r",
+									"            \"filmId\": 9,\r",
+									"            \"title\": \"Saunnnaily\",\r",
+									"            \"genreId\": 8,\r",
+									"            \"directorId\": 8,\r",
+									"            \"directorFirstName\": \"Eleanor\",\r",
+									"            \"directorLastName\": \"Shellstrop\",\r",
+									"            \"releaseDate\": \"2023-09-14T12:00:00.000Z\",\r",
+									"            \"ageRating\": \"R18\",\r",
+									"            \"rating\": 0\r",
+									"        }\r",
+									"\r",
+									"var expectedOrdering = [1, 13, 9]\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Valid count and number of films\", function() {\r",
+									"    try {\r",
+									"        var data = pm.response.json()\r",
+									"        pm.expect(data.count).to.equal(3)\r",
+									"        pm.expect(data.films.length).to.equal(3)\r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"Incorrect count or number of films\")\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Valid ordering\", function() {\r",
+									"    try {\r",
+									"        var films = pm.response.json().films\r",
+									"        for (var i = 0; i<expectedOrdering.length; i++){\r",
+									"            if (expectedOrdering[i] !== films[i].filmId){\r",
+									"                pm.expect.fail(\"Invalid ordering of films\")\r",
+									"                break\r",
+									"            }\r",
+									"        }\r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"Invalid ordering of films\")\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Valid film data\", function() {\r",
+									"    try{\r",
+									"        var data = pm.response.json()\r",
+									"        var film = data.films.filter(f => f.filmId === expectedData.filmId)[0]\r",
+									"        pm.expect(film.filmId).to.equal(expectedData.filmId)\r",
+									"        pm.expect(film.title).to.equal(expectedData.title)\r",
+									"        pm.expect(film.genreId).to.equal(expectedData.genreId)\r",
+									"        pm.expect(film.directorId).to.equal(expectedData.directorId)\r",
+									"        pm.expect(film.directorFirstName).to.equal(expectedData.directorFirstName)\r",
+									"        pm.expect(film.directorLastName).to.equal(expectedData.directorLastName)\r",
+									"        // check issue with release date\r",
+									"        pm.expect(film.releaseDate).to.equal(expectedData.releaseDate)\r",
+									"        pm.expect(film.ageRating).to.equal(expectedData.ageRating)\r",
+									"        pm.expect(film.rating).to.equal(expectedData.rating)\r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"Incorrect film data\")\r",
+									"    }\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/films?q=ail",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "ail"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /films (start & count - invalid)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/films?startIndex=a&count=b",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films"
+							],
+							"query": [
+								{
+									"key": "startIndex",
+									"value": "a"
+								},
+								{
+									"key": "count",
+									"value": "b"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /films (directorId)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var expectedData =  {\r",
+									"            \"filmId\": 2,\r",
+									"            \"title\": \"Siftorr Flintion\",\r",
+									"            \"genreId\": 3,\r",
+									"            \"directorId\": 2,\r",
+									"            \"directorFirstName\": \"Amanda\",\r",
+									"            \"directorLastName\": \"Faria\",\r",
+									"            \"releaseDate\": \"2017-07-16T07:30:00.000Z\",\r",
+									"            \"ageRating\": \"R16\",\r",
+									"            \"rating\": 5\r",
+									"        }\r",
+									"\r",
+									"var expectedOrdering = [2, 6, 13]\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Valid count and number of films\", function() {\r",
+									"    try {\r",
+									"        var data = pm.response.json()\r",
+									"        pm.expect(data.count).to.equal(3)\r",
+									"        pm.expect(data.films.length).to.equal(3)\r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"Incorrect count or number of films\")\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Valid ordering\", function() {\r",
+									"    try {\r",
+									"        var films = pm.response.json().films\r",
+									"        for (var i = 0; i<expectedOrdering.length; i++){\r",
+									"            if (expectedOrdering[i] !== films[i].filmId){\r",
+									"                pm.expect.fail(\"Invalid ordering of films\")\r",
+									"                break\r",
+									"            }\r",
+									"        }\r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"Invalid ordering of films\")\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Valid film data\", function() {\r",
+									"    try{\r",
+									"        var data = pm.response.json()\r",
+									"        var film = data.films.filter(f => f.filmId === expectedData.filmId)[0]\r",
+									"        pm.expect(film.filmId).to.equal(expectedData.filmId)\r",
+									"        pm.expect(film.title).to.equal(expectedData.title)\r",
+									"        pm.expect(film.genreId).to.equal(expectedData.genreId)\r",
+									"        pm.expect(film.directorId).to.equal(expectedData.directorId)\r",
+									"        pm.expect(film.directorFirstName).to.equal(expectedData.directorFirstName)\r",
+									"        pm.expect(film.directorLastName).to.equal(expectedData.directorLastName)\r",
+									"        // check issue with release date\r",
+									"        pm.expect(film.releaseDate).to.equal(expectedData.releaseDate)\r",
+									"        pm.expect(film.ageRating).to.equal(expectedData.ageRating)\r",
+									"        pm.expect(film.rating).to.equal(expectedData.rating)\r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"Incorrect film data\")\r",
+									"    }\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/films?directorId=2",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films"
+							],
+							"query": [
+								{
+									"key": "directorId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /films (sortBy RATING_DESC)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var expectedData = {\r",
+									"    \"filmId\": 5,\r",
+									"    \"title\": \"Ameron\",\r",
+									"    \"genreId\": 5,\r",
+									"    \"directorId\": 5,\r",
+									"    \"directorFirstName\": \"Ella\",\r",
+									"    \"directorLastName\": \"Yellow\",\r",
+									"    \"releaseDate\": \"2022-04-09T12:00:00.000Z\",\r",
+									"    \"ageRating\": \"M\",\r",
+									"    \"rating\": 9.5\r",
+									"}\r",
+									"\r",
+									"var expectedOrdering = [4, 5, 8, 1, 10, 6, 2, 7, 3, 14, 16, 9, 11, 12, 13, 15, 17, 18, 19, 20, 21, 22]\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Valid count and number of films\", function() {\r",
+									"    try {\r",
+									"        var data = pm.response.json()\r",
+									"        pm.expect(data.count).to.equal(22)\r",
+									"        pm.expect(data.films.length).to.equal(22)\r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"Incorrect count or number of films\")\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Valid ordering\", function() {\r",
+									"    try {\r",
+									"        var films = pm.response.json().films\r",
+									"        // f = films.map(f => f.filmId)\r",
+									"        // console.log(f.join(\", \"))\r",
+									"        for (var i = 0; i<expectedOrdering.length; i++){\r",
+									"            if (expectedOrdering[i] !== films[i].filmId){\r",
+									"                pm.expect.fail(\"Invalid ordering of films\")\r",
+									"                break\r",
+									"            }\r",
+									"        }\r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"Invalid ordering of films\")\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Valid film data\", function() {\r",
+									"    try{\r",
+									"        var data = pm.response.json()\r",
+									"        var film = data.films.filter(f => f.filmId === expectedData.filmId)[0]\r",
+									"        pm.expect(film.filmId).to.equal(expectedData.filmId)\r",
+									"        pm.expect(film.title).to.equal(expectedData.title)\r",
+									"        pm.expect(film.genreId).to.equal(expectedData.genreId)\r",
+									"        pm.expect(film.directorId).to.equal(expectedData.directorId)\r",
+									"        pm.expect(film.directorFirstName).to.equal(expectedData.directorFirstName)\r",
+									"        pm.expect(film.directorLastName).to.equal(expectedData.directorLastName)\r",
+									"        // check issue with release date\r",
+									"        pm.expect(film.releaseDate).to.equal(expectedData.releaseDate)\r",
+									"        pm.expect(film.ageRating).to.equal(expectedData.ageRating)\r",
+									"        pm.expect(film.rating).to.equal(expectedData.rating)\r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"Incorrect film data\")\r",
+									"    }\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/films?sortBy=RATING_DESC",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films"
+							],
+							"query": [
+								{
+									"key": "sortBy",
+									"value": "RATING_DESC"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /films (genreIds oneOf bad id)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/films?genreIds=999",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films"
+							],
+							"query": [
+								{
+									"key": "genreIds",
+									"value": "999"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /films (ageRatings twoOf)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var expectedData =  {\r",
+									"    \"filmId\": 1,\r",
+									"    \"title\": \"Bast Part: Dated to Bail\",\r",
+									"    \"genreId\": 11,\r",
+									"    \"directorId\": 1,\r",
+									"    \"directorFirstName\": \"Kristy\",\r",
+									"    \"directorLastName\": \"Lincoln\",\r",
+									"    \"releaseDate\": \"2022-05-01T00:00:00.000Z\",\r",
+									"    \"ageRating\": \"M\",\r",
+									"    \"rating\": 7.2\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Valid count and number of films\", function() {\r",
+									"    try {\r",
+									"        var data = pm.response.json()\r",
+									"        pm.expect(data.count).to.equal(12)\r",
+									"        pm.expect(data.films.length).to.equal(12)\r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"Incorrect count or number of films\")\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Valid film data\", function() {\r",
+									"    try{\r",
+									"        var data = pm.response.json()\r",
+									"        var film = data.films.filter(f => f.filmId === expectedData.filmId)[0]\r",
+									"        pm.expect(film.filmId).to.equal(expectedData.filmId)\r",
+									"        pm.expect(film.title).to.equal(expectedData.title)\r",
+									"        pm.expect(film.genreId).to.equal(expectedData.genreId)\r",
+									"        pm.expect(film.directorId).to.equal(expectedData.directorId)\r",
+									"        pm.expect(film.directorFirstName).to.equal(expectedData.directorFirstName)\r",
+									"        pm.expect(film.directorLastName).to.equal(expectedData.directorLastName)\r",
+									"        // check issue with release date\r",
+									"        pm.expect(film.releaseDate).to.equal(expectedData.releaseDate)\r",
+									"        pm.expect(film.ageRating).to.equal(expectedData.ageRating)\r",
+									"        pm.expect(film.rating).to.equal(expectedData.rating)\r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"Incorrect film data\")\r",
+									"    }\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/films?ageRatings=M&ageRatings=R16",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films"
+							],
+							"query": [
+								{
+									"key": "ageRatings",
+									"value": "M"
+								},
+								{
+									"key": "ageRatings",
+									"value": "R16"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /films (ageRatings oneOf - invalid)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/films?ageRatings=A",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films"
+							],
+							"query": [
+								{
+									"key": "ageRatings",
+									"value": "A"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /films (all parameters)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var expectedData = {\r",
+									"    \"filmId\": 1,\r",
+									"    \"title\": \"Bast Part: Dated to Bail\",\r",
+									"    \"genreId\": 11,\r",
+									"    \"directorId\": 1,\r",
+									"    \"directorFirstName\": \"Kristy\",\r",
+									"    \"directorLastName\": \"Lincoln\",\r",
+									"    \"releaseDate\": \"2022-05-01T00:00:00.000Z\",\r",
+									"    \"ageRating\": \"M\",\r",
+									"    \"rating\": 7.2\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Valid count and number of films\", function() {\r",
+									"    try {\r",
+									"        var data = pm.response.json()\r",
+									"        pm.expect(data.count).to.equal(2)\r",
+									"        pm.expect(data.films.length).to.equal(1)\r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"Incorrect count or number of films\")\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test(\"Valid film data\", function() {\r",
+									"    try{\r",
+									"        var data = pm.response.json()\r",
+									"        var film = data.films.filter(f => f.filmId === expectedData.filmId)[0]\r",
+									"        pm.expect(film.filmId).to.equal(expectedData.filmId)\r",
+									"        pm.expect(film.title).to.equal(expectedData.title)\r",
+									"        pm.expect(film.genreId).to.equal(expectedData.genreId)\r",
+									"        pm.expect(film.directorId).to.equal(expectedData.directorId)\r",
+									"        pm.expect(film.directorFirstName).to.equal(expectedData.directorFirstName)\r",
+									"        pm.expect(film.directorLastName).to.equal(expectedData.directorLastName)\r",
+									"        // check issue with release date\r",
+									"        pm.expect(film.releaseDate).to.equal(expectedData.releaseDate)\r",
+									"        pm.expect(film.ageRating).to.equal(expectedData.ageRating)\r",
+									"        pm.expect(film.rating).to.equal(expectedData.rating)\r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"Incorrect film data\")\r",
+									"    }\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/films?start=0&count=1&q=the&directorId=1&reviewerId=2&sortBy=RATING_DESC&genreIds=11&genreIds=2&ageRatings=M&ageRatings=PG",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films"
+							],
+							"query": [
+								{
+									"key": "start",
+									"value": "0"
+								},
+								{
+									"key": "count",
+									"value": "1"
+								},
+								{
+									"key": "q",
+									"value": "the"
+								},
+								{
+									"key": "directorId",
+									"value": "1"
+								},
+								{
+									"key": "reviewerId",
+									"value": "2"
+								},
+								{
+									"key": "sortBy",
+									"value": "RATING_DESC"
+								},
+								{
+									"key": "genreIds",
+									"value": "11"
+								},
+								{
+									"key": "genreIds",
+									"value": "2"
+								},
+								{
+									"key": "ageRatings",
+									"value": "M"
+								},
+								{
+									"key": "ageRatings",
+									"value": "PG"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /films/genres",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var expectedData =  [\r",
+									"    {\r",
+									"        \"genreId\": 5,\r",
+									"        \"name\": \"Action\"\r",
+									"    },\r",
+									"    {\r",
+									"        \"genreId\": 6,\r",
+									"        \"name\": \"Animation\"\r",
+									"    },\r",
+									"    {\r",
+									"        \"genreId\": 1,\r",
+									"        \"name\": \"Comedy\"\r",
+									"    },\r",
+									"    {\r",
+									"        \"genreId\": 9,\r",
+									"        \"name\": \"Crime\"\r",
+									"    },\r",
+									"    {\r",
+									"        \"genreId\": 7,\r",
+									"        \"name\": \"Drama\"\r",
+									"    },\r",
+									"    {\r",
+									"        \"genreId\": 4,\r",
+									"        \"name\": \"Film-Noir\"\r",
+									"    },\r",
+									"    {\r",
+									"        \"genreId\": 8,\r",
+									"        \"name\": \"Horror\"\r",
+									"    },\r",
+									"    {\r",
+									"        \"genreId\": 12,\r",
+									"        \"name\": \"Other\"\r",
+									"    },\r",
+									"    {\r",
+									"        \"genreId\": 2,\r",
+									"        \"name\": \"Romance\"\r",
+									"    },\r",
+									"    {\r",
+									"        \"genreId\": 3,\r",
+									"        \"name\": \"Sci-Fi\"\r",
+									"    },\r",
+									"    {\r",
+									"        \"genreId\": 10,\r",
+									"        \"name\": \"Thriller\"\r",
+									"    },\r",
+									"    {\r",
+									"        \"genreId\": 11,\r",
+									"        \"name\": \"Western\"\r",
+									"    }\r",
+									"]\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Valid genre data (ordering does not matter)\", function() {\r",
+									"    try{\r",
+									"        var data = pm.response.json()\r",
+									"        pm.expect(data.length).to.equal(expectedData.length)\r",
+									"        for (var i=0;i<expectedData.length; i++) {\r",
+									"            genre = data.filter(g => g.genreId === expectedData[i].genreId)[0]\r",
+									"            if (expectedData[i].name !== genre.name){\r",
+									"                pm.expect.fail(\"Incorrect genre data\")\r",
+									"            }\r",
+									"        }\r",
+									"        \r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"Incorrect genre data\")\r",
+									"    }\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/films/genres",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"genres"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /films/id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var expectedData = {\r",
+									"    \"filmId\": 1,\r",
+									"    \"title\": \"Bast Part: Dated to Bail\",\r",
+									"    \"description\": \"Four brothers are thrown into a new world when they join an illegal gang in a small town. The plan to eliminate it all goes wrong.\",\r",
+									"    \"genreId\": 11,\r",
+									"    \"directorId\": 1,\r",
+									"    \"directorFirstName\": \"Kristy\",\r",
+									"    \"directorLastName\": \"Lincoln\",\r",
+									"    \"releaseDate\": \"2022-05-01T00:00:00.000Z\",\r",
+									"    \"ageRating\": \"M\",\r",
+									"    \"runtime\": 130,\r",
+									"    \"rating\": 7.2,\r",
+									"    \"numReviews\": 5\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Expected data\", function() {\r",
+									"    try {\r",
+									"        var film = pm.response.json()\r",
+									"        pm.expect(film.filmId).to.equal(expectedData.filmId)\r",
+									"        pm.expect(film.title).to.equal(expectedData.title)\r",
+									"        pm.expect(film.description).to.equal(expectedData.description)\r",
+									"        pm.expect(film.genreId).to.equal(expectedData.genreId)\r",
+									"        pm.expect(film.directorId).to.equal(expectedData.directorId)\r",
+									"        pm.expect(film.directorFirstName).to.equal(expectedData.directorFirstName)\r",
+									"        pm.expect(film.directorLastName).to.equal(expectedData.directorLastName)\r",
+									"        // check issue with release date\r",
+									"        pm.expect(film.releaseDate).to.equal(expectedData.releaseDate)\r",
+									"        pm.expect(film.ageRating).to.equal(expectedData.ageRating)\r",
+									"        pm.expect(film.runtime).to.equal(expectedData.runtime)\r",
+									"        pm.expect(film.rating).to.equal(expectedData.rating)\r",
+									"        pm.expect(film.numReviews).to.equal(expectedData.numReviews)\r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"INVALID RESPONSE\")\r",
+									"    }\r",
+									"    \r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/films/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /films/id (doesn't exist)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/films/999999",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"999999"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /films (no description)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Postman Film\",\r\n    \"releaseDate\": \"2024-01-01 12:00:00\",\r\n    \"genreId\": 1,\r\n    \"runtime\": 104,\r\n    \"ageRating\": \"R16\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/films",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /films (long description)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Postman Film\",\r\n    \"description\": \"3cEaR07HfqFhTWpmtoE2wJ4qYn8fFgYHi0GmGaBD6mKOH6YWiVQkpBuYLZ2csZN52bwA4D99ZGY9hSwsqSfQqQ3QA85clKh0bJykcJWyeeW4ugbwvy7XqhmzeX8FTH97ISw6Eccm327Em0DsKDKWaYNIXPxnReepM26Eu5k0FIHu0YSpKyr5psizXC79rNdpJrAR4tyQhyDVyabH3OitlwhI8B3OvSlnfe3STo0j2rED039zLY4Vn9HAeISbptrHUl7RAAsi1xtAiFyi7gnDSdCyaWabXxroAI7rJ8EsUm7UEpaJhNNC38Ewy2MFrnOhR6Y8OzIknX6TGLdbfdoz5QErCrs6IjxCylRjlL1lh16LyXhSX03FLnERwWOzx95UbnI5Gou1SZmHZmbdLfvNqSwYmg7iKwYhM8ftmJhhOpwcyMqbubqSwVJihxUUeOYfzSlfbTKbPnknVQfwA5q06dF0ifaR7pNuVw7y3gebHUdu63eco2lhGWOoJcYFf2xuo\",\r\n    \"releaseDate\": \"2024-01-01 12:00:00\",\r\n    \"genreId\": 1,\r\n    \"runtime\": 104,\r\n    \"ageRating\": \"R16\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/films",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /films (invalid releaseDate)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Postman Film\",\r\n    \"description\": \"A film from Postman\",\r\n    \"releaseDate\": \"2024/01/01T12:00:00\",\r\n    \"genreId\": 1,\r\n    \"runtime\": 100,\r\n    \"ageRating\": \"R16\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/films",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /films (releaseDate in past)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Postman Film\",\r\n    \"description\": \"A film from Postman\",\r\n    \"releaseDate\": \"2002-01-01 12:00:00\",\r\n    \"genreId\": 1,\r\n    \"runtime\": 104,\r\n    \"ageRating\": \"R16\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/films",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /films",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"film id\", function() {\r",
+									"    const filmId = pm.response.json().filmId;\r",
+									"    pm.expect(filmId).to.not.be.undefined\r",
+									"    if (typeof filmId !== \"undefined\") {\r",
+									"        pm.globals.set(\"film_id\", filmId);\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Postman Film\",\r\n    \"description\": \"A film from Postman\",\r\n    \"releaseDate\": \"2024-01-01 12:00:00\",\r\n    \"genreId\": 1,\r\n    \"runtime\": 104,\r\n    \"ageRating\": \"R16\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/films",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "VALIDATION - GET /films/:id (Check post)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var expectedData = {\r",
+									"    \"filmId\": 23,\r",
+									"    \"title\": \"Postman Film\",\r",
+									"    \"description\": \"A film from Postman\",\r",
+									"    \"genreId\": 1,\r",
+									"    \"directorId\": 19,\r",
+									"    \"directorFirstName\": \"Mike\",\r",
+									"    \"directorLastName\": \"Wheeler\",\r",
+									"    \"releaseDate\": \"2023-12-31T23:00:00.000Z\",\r",
+									"    \"ageRating\": \"R16\",\r",
+									"    \"runtime\": 104,\r",
+									"    \"rating\": 0,\r",
+									"    \"numReviews\": 0\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Expected data\", function() {\r",
+									"    try {\r",
+									"        var film = pm.response.json()\r",
+									"        pm.expect(film.filmId).to.equal(expectedData.filmId)\r",
+									"        pm.expect(film.title).to.equal(expectedData.title)\r",
+									"        pm.expect(film.description).to.equal(expectedData.description)\r",
+									"        pm.expect(film.genreId).to.equal(expectedData.genreId)\r",
+									"        pm.expect(film.directorId).to.equal(expectedData.directorId)\r",
+									"        pm.expect(film.directorFirstName).to.equal(expectedData.directorFirstName)\r",
+									"        pm.expect(film.directorLastName).to.equal(expectedData.directorLastName)\r",
+									"        // check issue with release date\r",
+									"        pm.expect(film.releaseDate).to.equal(expectedData.releaseDate)\r",
+									"        pm.expect(film.ageRating).to.equal(expectedData.ageRating)\r",
+									"        pm.expect(film.runtime).to.equal(expectedData.runtime)\r",
+									"        pm.expect(film.rating).to.equal(expectedData.rating)\r",
+									"        pm.expect(film.numReviews).to.equal(expectedData.numReviews)\r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"INVALID RESPONSE\")\r",
+									"    }\r",
+									"    \r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/films/{{film_id}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"{{film_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH /films/:id (unauthorized)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/films/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH /films/:id (NaN)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400, 403, or 404\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([400, 403, 404]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/films/NaN",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"NaN"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "HELPER - Get token for auction Copy",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"film_1_user_token\", \"token\");\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "UPDATE `user` SET `auth_token`='token' WHERE `id`=1;"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/executeSql",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"executeSql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH /films/:id (title & description)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (pm.globals.get(\"film_id\") == undefined){\r",
+									"    throw new Error(\"No valid film id found\")\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200)});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{film_1_user_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Updated Postman Title\",\r\n    \"description\": \"Updated Postman Description\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/films/12",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH /films/:id (genreId, runtime, ageRating)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (pm.globals.get(\"film_id\") == undefined){\r",
+									"    throw new Error(\"No valid film id found\")\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{film_1_user_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"genreId\": 10,\r\n    \"runtime\": 99,\r\n    \"ageRating\": \"M\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/films/12",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "VALIDATION - GET /films/:id (Check patches)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// if (pm.globals.get(\"minimal_film_id\") == undefined){\r",
+									"//     throw new Error(\"No valid minimal film id found\")\r",
+									"// }"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var expectedData = {\r",
+									"    \"filmId\": 12,\r",
+									"    \"title\": \"Updated Postman Title\",\r",
+									"    \"description\": \"Updated Postman Description\",\r",
+									"    \"genreId\": 10,\r",
+									"    \"directorId\": 1,\r",
+									"    \"directorFirstName\": \"Kristy\",\r",
+									"    \"directorLastName\": \"Lincoln\",\r",
+									"    \"releaseDate\": \"2025-12-31T23:00:00.000Z\",\r",
+									"    \"ageRating\": \"M\",\r",
+									"    \"runtime\": 99,\r",
+									"    \"rating\": 0,\r",
+									"    \"numReviews\": 0\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Expected data\", function() {\r",
+									"    try {\r",
+									"        var film = pm.response.json()\r",
+									"        pm.expect(film.filmId).to.equal(expectedData.filmId)\r",
+									"        pm.expect(film.title).to.equal(expectedData.title)\r",
+									"        pm.expect(film.description).to.equal(expectedData.description)\r",
+									"        pm.expect(film.genreId).to.equal(expectedData.genreId)\r",
+									"        pm.expect(film.directorId).to.equal(expectedData.directorId)\r",
+									"        pm.expect(film.directorFirstName).to.equal(expectedData.directorFirstName)\r",
+									"        pm.expect(film.directorLastName).to.equal(expectedData.directorLastName)\r",
+									"        // check issue with release date\r",
+									"        pm.expect(film.releaseDate).to.equal(expectedData.releaseDate)\r",
+									"        pm.expect(film.ageRating).to.equal(expectedData.ageRating)\r",
+									"        pm.expect(film.runtime).to.equal(expectedData.runtime)\r",
+									"        pm.expect(film.rating).to.equal(expectedData.rating)\r",
+									"        pm.expect(film.numReviews).to.equal(expectedData.numReviews)\r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"INVALID RESPONSE\")\r",
+									"    }\r",
+									"    \r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/films/12",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH /films/:id (releaseDate)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (pm.globals.get(\"film_id\") == undefined){\r",
+									"    throw new Error(\"No valid film id found\")\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{film_1_user_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"releaseDate\": \"2026-01-01 00:00:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/films/12",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH /films/:id (empty description)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (pm.globals.get(\"film_id\") == undefined){\r",
+									"    throw new Error(\"No valid film id found\")\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{film_1_user_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/films/12",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH /films/:id (out of bounds runtime)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (pm.globals.get(\"film_id\") == undefined){\r",
+									"    throw new Error(\"No valid film id found\")\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{film_1_user_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"runtime\": 9999\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/films/12",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH /films/:id (invalid ageRating)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (pm.globals.get(\"film_id\") == undefined){\r",
+									"    throw new Error(\"No valid film id found\")\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{film_1_user_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ageRating\": \"NotAnAgeRating\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/films/12",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "HELPER - Change film releaseDate",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "UPDATE `film` SET `release_date`='2000-01-01 00:00:00' WHERE `id`=12;"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/executeSql",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"executeSql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH /films/:id (change releaseDate after it has passed)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (pm.globals.get(\"film_id\") == undefined){\r",
+									"    throw new Error(\"No valid film id found\")\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{film_1_user_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"releaseDate\": \"2026-01-01 12:00:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/films/12",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "HELPER - Add review to film",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "INSERT INTO `film_review`(film_id, user_id, rating, review) VALUES (12, 2, 10, null);"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/executeSql",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"executeSql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH /films/:id (change title after review)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (pm.globals.get(\"film_id\") == undefined){\r",
+									"    throw new Error(\"No valid film id found\")\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{film_1_user_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Updating a film after a review has been made?\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/films/12",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE /films/:id (other users film)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (pm.globals.get(\"film_id\") == undefined){\r",
+									"    throw new Error(\"No valid film id found\")\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/films/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE /films/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (pm.globals.get(\"film_id\") == undefined){\r",
+									"    throw new Error(\"No valid film id found\")\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/films/{{film_id}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"{{film_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "VALIDATION - GET /films/:id (check delete worked)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/films/{{film_id}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"{{film_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "films.reviews",
+			"item": [
+				{
+					"name": "GET reviews",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var expectedData = {\r",
+									"    \"reviewerId\": 8,\r",
+									"    \"reviewerFirstName\": \"Eleanor\",\r",
+									"    \"reviewerLastName\": \"Shellstrop\",\r",
+									"    \"rating\": 3,\r",
+									"    \"review\": null,\r",
+									"    \"timestamp\": \"2022-10-31T18:15:22.000Z\"\r",
+									"}\r",
+									"\r",
+									"var expectedOrdering = [8, 4, 5, 7, 2]\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Valid number of reviews\", function() {\r",
+									"    try {\r",
+									"        var data = pm.response.json()\r",
+									"        pm.expect(data.length).to.equal(5)\r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"Incorrect count or number of reviews\")\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Valid ordering\", function() {\r",
+									"    try {\r",
+									"        var reviews = pm.response.json()\r",
+									"        for (var i = 0; i<expectedOrdering.length; i++){\r",
+									"            if (expectedOrdering[i] !== reviews[i].reviewerId){\r",
+									"                pm.expect.fail(\"Invalid ordering of reviews\")\r",
+									"                break\r",
+									"            }\r",
+									"        }\r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"Invalid ordering of reviews\")\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Valid review data\", function() {\r",
+									"    try{\r",
+									"        var data = pm.response.json()\r",
+									"        var review = data.filter(r => r.reviewerId === expectedData.reviewerId)[0]\r",
+									"        pm.expect(review.reviewerId).to.equal(expectedData.reviewerId)\r",
+									"        pm.expect(review.reviewerFirstName).to.equal(expectedData.reviewerFirstName)\r",
+									"        pm.expect(review.reviewerLastName).to.equal(expectedData.reviewerLastName)\r",
+									"        pm.expect(review.rating).to.equal(expectedData.rating)\r",
+									"        pm.expect(review.review).to.equal(expectedData.review)\r",
+									"        pm.expect(review.timestamp).to.equal(expectedData.timestamp)\r",
+									"        \r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"Incorrect review data\")\r",
+									"    }\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/films/1/reviews",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"1",
+								"reviews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST review (invalid rating - float)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"review\": \"A Postman Review\",\r\n    \"rating\": 5.5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/films/1/reviews",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"1",
+								"reviews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST review (No auth)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"review\": \"A Postman Review\",\r\n    \"rating\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/films/1/reviews",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"1",
+								"reviews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST review",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"review\": \"A Postman Review\",\r\n    \"rating\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/films/1/reviews",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"1",
+								"reviews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "VALIDATION - GET reviews (Check post)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var expectedData = {\r",
+									"    \"reviewerId\": 19,\r",
+									"    \"reviewerFirstName\": \"Mike\",\r",
+									"    \"reviewerLastName\": \"Wheeler\",\r",
+									"    \"rating\": 10,\r",
+									"    \"review\": \"A Postman Review\",\r",
+									"    \"timestamp\": \"2022-12-18T22:38:23.000Z\" //ignored\r",
+									"}\r",
+									"\r",
+									"var expectedOrdering = [19, 8, 4, 5, 7, 2]\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Valid number of reviews\", function() {\r",
+									"    try {\r",
+									"        var data = pm.response.json()\r",
+									"        pm.expect(data.length).to.equal(6)\r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"Incorrect count or number of reviews\")\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Valid ordering\", function() {\r",
+									"    try {\r",
+									"        var reviews = pm.response.json()\r",
+									"        for (var i = 0; i<expectedOrdering.length; i++){\r",
+									"            if (expectedOrdering[i] !== reviews[i].reviewerId){\r",
+									"                pm.expect.fail(\"Invalid ordering of reviews\")\r",
+									"                break\r",
+									"            }\r",
+									"        }\r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"Invalid ordering of reviews\")\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Valid review data\", function() {\r",
+									"    try{\r",
+									"        var data = pm.response.json()\r",
+									"        var review = data.filter(r => r.reviewerId === expectedData.reviewerId)[0]\r",
+									"        pm.expect(review.reviewerId).to.equal(expectedData.reviewerId)\r",
+									"        pm.expect(review.reviewerFirstName).to.equal(expectedData.reviewerFirstName)\r",
+									"        pm.expect(review.reviewerLastName).to.equal(expectedData.reviewerLastName)\r",
+									"        pm.expect(review.rating).to.equal(expectedData.rating)\r",
+									"        pm.expect(review.review).to.equal(expectedData.review)\r",
+									"        // timestamp ignored as it depends on the test\r",
+									"        // pm.expect(review.timestamp).to.equal(expectedData.timestamp)\r",
+									"        \r",
+									"    } catch (err) {\r",
+									"        pm.expect.fail(\"Incorrect review data\")\r",
+									"    }\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/films/1/reviews",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"1",
+								"reviews"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "films.images",
+			"item": [
+				{
+					"name": "GET /films/:id/image (someone else's)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/films/1/image",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"1",
+								"image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /films/:id/image (not found)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/films/999999/image",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"999999",
+								"image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /films/:id/image (other users film)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": "sample.jpg"
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/films/1/image",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"1",
+								"image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "HELPER - Get token for auction",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"film_20_user_token\", \"token_user_9\");\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "UPDATE `user` SET `auth_token`='token_user_9' WHERE `id`=9;"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/executeSql",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"executeSql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /films/:id/image (gif)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{film_20_user_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": "sample.gif"
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/films/20/image",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"20",
+								"image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /films/:id/image (png)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "{{film_20_user_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": "sample.png"
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/films/20/image",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"films",
+								"20",
+								"image"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
